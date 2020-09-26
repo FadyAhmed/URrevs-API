@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Review = require('./models/reviews');
 
 // set up app
 const app = express();
@@ -17,6 +18,10 @@ app.use(bodyParser.json());
 app.use('/urrevs', require('./routes/reviews'));
 app.use('/urrevs', require('./routes/likes'));
 app.use('/urrevs', require('./routes/comments'));
+app.use('/urrevs', require('./routes/questions'));
+app.use('/urrevs', require('./routes/user'));
+app.use('/urrevs', require('./routes/article'));
+app.use('/urrevs', require('./routes/phone'));
 
 // handling error
 app.use(function (error, req, res, next) {

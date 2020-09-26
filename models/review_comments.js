@@ -8,13 +8,13 @@ const CommentSchema = new Schema({
         required: true
     },
     date: {
-        type: Number
+        type: String
     },
     comment: {
         type: String,
         require: true,
     },
-    user_avater: {
+    user_avatar: {
         type: String,
     },
     user_name: {

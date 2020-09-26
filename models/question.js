@@ -1,45 +1,69 @@
 const mongoose = require('mongoose');
-const CommentSchema = require('./review_comments');
+const LikeSchema = require('./review_likes');
 const Schema = mongoose.Schema;
 
 const AnswerSchema = Schema({
+    user_id: {
+        type: String,
+        required: true
+    },
     answer: {
         type: String,
         required: true
     },
     up_votes: {
-        type: Number,
-        default: 0
+        type: [String],
+        createIndex: true
     },
     down_votes: {
-        type: Number,
-        default: 0
+        type: [String],
+        createIndex: true
     },
-    verified: {
-        type: Boolean,
-        default: false
+    date: {
+        type: String
     }
 });
 
 const YesQuestionSchema = Schema({
+    product: {
+        type: String
+    },
     yes: {
-        type: Number
+        type: [String],
     },
     no: {
-        type: Number
+        type: [String],
     },
-    question: {
+});
+
+const AboutPhoneSchema = Schema({
+    product: {
+        type: String,
+        required: true
+    },
+    for_users: {
+        type: Boolean
+    },
+    for_famous: {
         type: String
-    }
+    },
 });
 
 const QuestionSchema = Schema({
+    question_type_s: {
+        type: String,
+    },
+    question_type: {
+        type: YesQuestionSchema || AboutPhoneSchema,
+        required: true
+    },
     question: {
-        type: YesQuestionSchema,
+        type: String,
         required: true
     },
     date: {
-        type: String
+        type: String,
+        createIndex: true
     },
     likes: {
         type: [LikeSchema]
@@ -47,8 +71,8 @@ const QuestionSchema = Schema({
     answers: {
         type: [AnswerSchema]
     },
-    correct_answer: {
-        type: AnswerSchema
+    best_answer: {
+        type: String
     }
 });
 

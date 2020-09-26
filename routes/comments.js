@@ -14,6 +14,7 @@ router.post('/comment/:revid', function (req, res, next) {
 router.get('/comments/:revid', function (req, res) {
     const limit = 3;
     const startIndex = req.query.page * limit;
+
     Review.find({ "_id": req.params.revid }
         , { _id: 1, "comments": { $slice: [startIndex, limit] } }
     )

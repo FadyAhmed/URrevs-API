@@ -3,8 +3,6 @@ const CommentSchema = require('./review_comments');
 const LikeSchema = require('./review_likes');
 const Schema = mongoose.Schema;
 
-
-
 // create review Schema & model
 const ReviewSchema = new Schema({
     likes: {
@@ -18,8 +16,7 @@ const ReviewSchema = new Schema({
     },
     brand: {
         type: String,
-        createIndex: "brand",
-        // required: true,
+        required: true,
     },
     brand_bros: {
         type: String
@@ -32,61 +29,58 @@ const ReviewSchema = new Schema({
     },
     cons: {
         type: String,
-        // required: true
+        required: true
 
     },
     date_buy: {
         type: String,
-        // required: true
-
+        required: true
     },
     date_rev: {
         type: String,
-        createIndex: "date_rev",
-        // required: true
+        required: true
 
     },
     email: {
         type: String,
-        // required: true
+        required: true
 
     },
     product: {
         type: String,
-        createIndex: "product"
-        // required: true,
+        required: true,
     },
     pros: {
         type: String,
-        // required: true
+        required: true
 
     },
     rate1: {
         type: String,
-        // required: true
+        required: true
     },
     rate2: {
         type: String,
-        //required: true
+        required: true
     },
     rate3: {
         type: String,
-        // required: true
+        required: true
 
     },
     rate4: {
         type: String,
-        // required: true
+        required: true
 
     },
     rate5: {
         type: String,
-        // required: true
+        required: true
 
     },
     rate6: {
         type: String,
-        //required: true
+        required: true
 
     },
     shown: {
@@ -94,7 +88,7 @@ const ReviewSchema = new Schema({
     },
     user_avater: {
         type: String,
-        //required: true
+        required: true
 
     },
     user_id: {
@@ -102,8 +96,7 @@ const ReviewSchema = new Schema({
     },
     user_name: {
         type: String,
-        // required: true
-
+        required: true
     },
     views: {
         type: String

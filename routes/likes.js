@@ -1,7 +1,6 @@
 const express = require('express');
 const Review = require('../models/reviews');
 const router = express.Router();
-const Like = require('../models/review_likes');
 
 router.post('/like/:revid', function (req, res, next) {
     Review.findOneAndUpdate({ "_id": req.params.revid },
@@ -11,7 +10,7 @@ router.post('/like/:revid', function (req, res, next) {
 });
 
 router.get('/likes/:revid', function (req, res) {
-    const limit = 30;
+    const limit = 5;
     const startIndex = req.query.page * limit;
     Review.find({ "_id": req.params.revid }
         , { _id: 1, "likes": { $slice: [startIndex, limit] } }
