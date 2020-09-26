@@ -2,6 +2,7 @@ const express = require('express');
 const Review = require('../models/reviews');
 const router = express.Router();
 
+// like it
 router.post('/like/:revid', function (req, res, next) {
     Review.findOneAndUpdate({ "_id": req.params.revid },
         { $push: { likes: req.body } }, function (err, doc) {
@@ -9,6 +10,7 @@ router.post('/like/:revid', function (req, res, next) {
         });
 });
 
+// review likes
 router.get('/likes/:revid', function (req, res) {
     const limit = 5;
     const startIndex = req.query.page * limit;
@@ -37,6 +39,7 @@ router.get('/isliked/:revid', function (req, res) {
     });
 });
 
+// unlike
 router.delete('/likes/:revid', function (req, res, next) {
     Review.update({ "_id": req.params.revid }
         , { $pull: { likes: { user_id: req.query.userid } } }

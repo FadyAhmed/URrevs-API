@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const Review = require('./models/reviews');
+const cron = require('node-cron');
+const Brand = require('./models/brand');
 
 // set up app
 const app = express();
@@ -22,6 +23,7 @@ app.use('/urrevs', require('./routes/questions'));
 app.use('/urrevs', require('./routes/user'));
 app.use('/urrevs', require('./routes/article'));
 app.use('/urrevs', require('./routes/phone'));
+app.use('/urrevs', require('./routes/brand_routes'));
 
 // handling error
 app.use(function (error, req, res, next) {
@@ -31,4 +33,10 @@ app.use(function (error, req, res, next) {
 // listen for requests
 app.listen(process.env.port || 4000, function () {
     console.log('listing');
+    cron.schedule("0 */1 * * *", function () {
+        console.log('d');
+        Brand.updateMany(
+            {},
+            { $pull: { story: { until: { $lt: Math.floor(Date.now() / 1000) } } } });
+    });
 });
