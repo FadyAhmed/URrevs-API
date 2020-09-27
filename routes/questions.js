@@ -56,7 +56,6 @@ router.post('/answer/yesorno/:questionId', function (req, res, next) {
     }
 });
 
-
 // up and down vote
 router.post('/answer/upordown/:questionId/:answerId', function (req, res, next) {
     if (req.query.ans == 'up') {

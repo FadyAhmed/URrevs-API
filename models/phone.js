@@ -8,6 +8,9 @@ const PhoneSchema = new Schema({
         required: true,
         createIndex: true
     },
+    publish_date: {
+        type: String
+    },
     device: {
         type: String,
         required: true,

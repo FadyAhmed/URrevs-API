@@ -2,7 +2,6 @@ const express = require('express');
 const { update } = require('../models/reviews');
 const Review = require('../models/reviews');
 const router = express.Router();
-const Comment = require('../models/review_comments');
 
 router.post('/comment/:revid', function (req, res, next) {
     Review.findOneAndUpdate({ "_id": req.params.revid },

@@ -9,7 +9,7 @@ router.get('/users/:user_id', function (req, res) {
     });
 });
 
-// add user profile
+// add or update user profile
 router.post('/user/:user_id', function (req, res, next) {
     User.updateOne({ "_id": req.params.user_id },
         req.body,
@@ -30,7 +30,7 @@ router.post('/user/:user_id', function (req, res, next) {
 // update products list
 router.post('/userproducts/:user_id', function (req, res, next) {
     User.find({ _id: req.params.user_id })
-        .update({ $push: { "owned_products": req.body.product } },
+        .update({ $set: { "owned_products": req.body.product } },
             function (err) {
                 if (err) {
                     console.log(err);
@@ -41,10 +41,19 @@ router.post('/userproducts/:user_id', function (req, res, next) {
 
 // get user products
 router.get('/userproducts/:user_id', function (req, res) {
-    User.find({ "_id": req.params.user_id }, { _id: 1, owned_products: 1, user_id: 1 }).
+    User.find({ "_id": req.params.user_id }, { _id: 1, owned_products: 1, }).
         then(function (products) {
             res.send(products);
         })
+});
+
+// delete product from owned products
+router.delete('/userproducts/:user_id', function (req, res) {
+    User.updateOne({ _id: req.params.user_id },
+        { $pull: { "owned_products": req.body.product } }
+    ).then(function (val) {
+        res.send(val);
+    });
 });
 
 module.exports = router;

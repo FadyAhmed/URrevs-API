@@ -3,7 +3,7 @@ const { createIndexes } = require('./article');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    user_id: {
+    _id: {
         type: String,
         required: true,
         createIndex: true
