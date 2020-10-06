@@ -9,6 +9,12 @@ const ArticleSchema = new Schema({
         required: true,
         createIndex: true
     },
+    user_name: {
+        type: String
+    },
+    user_avatar: {
+        type: String
+    },
     date: {
         type: String,
         createIndex: true
@@ -22,12 +28,6 @@ const ArticleSchema = new Schema({
     content: {
         type: String
     },
-    likes: {
-        type: [LikeSchema]
-    },
-    comments: {
-        type: [CommentSchema]
-    }
 });
 
 const Article = mongoose.model('article', ArticleSchema);

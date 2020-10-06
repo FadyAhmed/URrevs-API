@@ -44,7 +44,6 @@ const ReviewSchema = new Schema({
     email: {
         type: String,
         required: true
-
     },
     product: {
         type: String,
@@ -54,6 +53,10 @@ const ReviewSchema = new Schema({
         type: String,
         required: true
 
+    },
+    rate: {
+        type: String,
+        required: true
     },
     rate1: {
         type: String,
@@ -86,10 +89,9 @@ const ReviewSchema = new Schema({
     shown: {
         type: Boolean
     },
-    user_avater: {
+    user_avatar: {
         type: String,
         required: true
-
     },
     user_id: {
         type: String
@@ -99,7 +101,7 @@ const ReviewSchema = new Schema({
         required: true
     },
     views: {
-        type: String
+        type: Number
     },
 });
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Review = require('../models/reviews');
 
+// get reviews
 router.get('/reviews', function (req, res) {
     const limit = 5;
     const page = parseInt(req.query.page);
@@ -23,14 +24,16 @@ router.get('/reviews', function (req, res) {
     }
 });
 
-router.post('/reviews', function (req, res, next) {
+// create review
+router.post('/review', function (req, res, next) {
     Review.create(req.body).then(function (rev) {
         res.send(rev);
     }).catch(next);
 });
 
-router.delete('/reviews/:id', function (req, res, next) {
-    Review.findByIdAndRemove({ _id: req.params.id }, function (err, doc) {
+// delete review (admins)
+router.delete('/reviews/:reviewId', function (req, res, next) {
+    Review.findByIdAndRemove({ _id: req.params.reviewId }, function (err, doc) {
         if (doc != null) {
             if (err == null) {
                 res.send({ message: "Succesfully deleted", doc: doc });

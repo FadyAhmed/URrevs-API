@@ -58,7 +58,7 @@ router.get('/exactphone', function (req, res) {
     const product = req.query.product;
 
     Phone.find({ "brand": brand, "device": product }).then(function (phone) {
-        res.send(phone);
+        res.send(phone[0]);
     })
 });
 

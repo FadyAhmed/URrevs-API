@@ -2,6 +2,9 @@ const express = require('express');
 const Article = require('../models/article');
 const router = express.Router();
 const User = require('../models/user');
+const Like = require('../models/article_like');
+const ArticleLike = require('../models/article_like');
+const ArticleComment = require('../models/article_comment');
 
 // get articles
 router.get('/articles', function (req, res) {
@@ -25,8 +28,23 @@ router.get('/articles', function (req, res) {
     }
 });
 
+// get excact famous articles
+router.get('/articles/:famousId', function (req, res) {
+    const limit = 5;
+    const page = parseInt(req.query.page);
+    const famous = req.params.famousId;
+    const startIndex = limit * page;
+
+    Article.find({ "user_id": famous }, { "likes": 0, "comments": 0 }).sort("-date")
+        .limit(limit).skip(startIndex)
+        .then(function (revs) {
+            res.send(revs);
+        });
+});
+
 // post article
 router.post('/article/:user_id', function (req, res, next) {
+    // famous check
     User.findById({ "_id": req.params.user_id }).then(function (user) {
         if (user) {
             if (user.famous) {
@@ -48,78 +66,64 @@ router.delete('/articles/:article_id', function (req, res, next) {
 });
 
 // like it
-router.post('/likeArticle/:revid', function (req, res, next) {
-    Article.findOneAndUpdate({ "_id": req.params.revid },
-        { $push: { likes: req.body } }, function (err, doc) {
-            res.send({ "doc": doc, "err": err });
-        });
+router.post('/likeArticle', function (req, res, next) {
+    Like.create(req.body).then(function (doc) {
+        res.send(doc);
+    });
 });
 
-// review likes
-router.get('/likesArticle/:revid', function (req, res) {
+// get likes
+router.get('/articlelikes/:articleId', function (req, res) {
     const limit = 5;
     const startIndex = req.query.page * limit;
-    Article.find({ "_id": req.params.revid }
-        , { _id: 1, "likes": { $slice: [startIndex, limit] } }
-    ).then(function (likes) {
-        console.log(likes);
-        if (likes != undefined) {
-            res.send(likes[0].likes);
-        } else {
-            res.send({ message: "error" })
-        }
-    });
+
+    ArticleLike.find({}).where('article_id', req.params.articleId)
+        .sort('-date').limit(limit).skip(startIndex).then(function (likes) {
+            res.send(likes);
+        })
 });
 
 // get excact like (if user is like or not)
-router.get('/islikedArticle/:revid', function (req, res) {
-    Article.find({ "_id": req.params.revid }
-        , { _id: 1, "likes": { $elemMatch: { user_id: req.query.userid } } }
-    ).then(function (like) {
-        if (like[0].likes.length == 0) {
-            res.send(false);
-        } else {
+router.get('/islikedArticle', function (req, res) {
+    ArticleLike.findById({ _id: req.body._id }).then(function (like) {
+        if (like) {
             res.send(true);
+        } else {
+            res.send(false);
         }
-    });
+    })
 });
 
 // unlike
-router.delete('/likesArticle/:revid', function (req, res, next) {
-    Article.update({ "_id": req.params.revid }
-        , { $pull: { likes: { user_id: req.query.userid } } }
-    ).then(function (result) {
-        res.send(result);
-    });
+router.delete('/likesArticle', function (req, res, next) {
+    ArticleLike.findByIdAndDelete({ _id: req.body._id }).then(function (d) {
+        res.send(d);
+    })
 });
 
 // comment
-router.post('/commentArticle/:revid', function (req, res, next) {
-    Article.findOneAndUpdate({ "_id": req.params.revid },
-        { $push: { comments: req.body } }, function (err, doc) {
-            res.send({ "doc": doc, "err": err });
-        });
+router.post('/commentArticle', function (req, res, next) {
+    ArticleComment.create(req.body).then(function (doc) {
+        res.send(doc);
+    })
 });
 
 // get comments
-router.get('/commentsArticle/:revid', function (req, res) {
-    const limit = 3;
+router.get('/commentsArticle/:articleId', function (req, res) {
+    const limit = 5;
     const startIndex = req.query.page * limit;
 
-    Article.find({ "_id": req.params.revid }
-        , { _id: 1, "comments": { $slice: [startIndex, limit] } }
-    )
+    ArticleComment.find({}).where("article_id", req.params.articleId)
+        .sort('-date').limit(limit).skip(startIndex)
         .then(function (comments) {
-            res.send(comments[0].comments);
+            res.send(comments);
         });
 });
 
 // delete comment (admin)
-router.delete('/commentsArticle/:revid', function (req, res, next) {
-    Article.update({ "_id": req.params.revid }
-        , { $pull: { comments: { user_id: req.query.userid } } }
-    ).then(function (result) {
-        res.send(result);
+router.delete('/commentsArticle/:commentId', function (req, res, next) {
+    ArticleComment.findByIdAndDelete({ _id: req.params.commentId }).then(function (com) {
+        res.send(com);
     });
 });
 

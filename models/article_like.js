@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const LikeSchema = new Schema({
-    user_id: {
+const ArticleLikeLikeSchema = new Schema({
+    _id: {
         type: String,
         required: true
     },
-    review_id: {
+    article_id: {
         type: String,
         required: true
     },
@@ -21,6 +21,6 @@ const LikeSchema = new Schema({
     }
 });
 
-// const Like = mongoose.model('likes', LikeSchema, 'reviews_likes');
+const ArticleLike = mongoose.model('likes', ArticleLikeLikeSchema, 'articles_likes');
 
-module.exports = LikeSchema;
+module.exports = ArticleLike;

@@ -1,26 +1,30 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const LikeSchema = new Schema({
+const ArticleCommentSchema = new Schema({
     user_id: {
         type: String,
         required: true
     },
-    review_id: {
+    article_id: {
         type: String,
         required: true
     },
     date: {
+        type: String
+    },
+    comment: {
         type: String,
+        require: true,
     },
     user_avatar: {
         type: String,
     },
     user_name: {
         type: String,
-    }
+    },
 });
 
-// const Like = mongoose.model('likes', LikeSchema, 'reviews_likes');
+const ArticleComment = mongoose.model('comments', ArticleCommentSchema, 'article_comments');
 
-module.exports = LikeSchema;
+module.exports = ArticleComment;
