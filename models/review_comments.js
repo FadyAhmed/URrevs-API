@@ -7,6 +7,10 @@ const CommentSchema = new Schema({
         type: String,
         required: true
     },
+    post_id: {
+        type: String,
+        required: true
+    },
     date: {
         type: String
     },
@@ -20,11 +24,11 @@ const CommentSchema = new Schema({
     user_name: {
         type: String,
     },
-    post_id: {
-        type: String
+    replies: {
+        type: Array
     }
 });
 
-//const Comment = mongoose.model('comments', CommentSchema, 'reviews_comments');
+const ReviewComment = mongoose.model('reviews_comments', CommentSchema, 'reviews_comments');
 
-module.exports = CommentSchema;
+module.exports = ReviewComment;

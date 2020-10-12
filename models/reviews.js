@@ -23,9 +23,6 @@ const ReviewSchema = new Schema({
     likes: {
         type: [LikeSchema]
     },
-    comments: {
-        type: [CommentSchema]
-    },
     approved: {
         type: Boolean
     },
@@ -99,7 +96,6 @@ const ReviewSchema = new Schema({
     rate6: {
         type: String,
         required: true
-
     },
     shown: {
         type: Boolean
