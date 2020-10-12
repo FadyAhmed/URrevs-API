@@ -44,14 +44,19 @@ router.get('/userproducts/:user_id', function (req, res) {
 
 // update products list
 router.post('/userproducts/:user_id', function (req, res, next) {
-    User.findOneAndUpdate({ _id: req.params.user_id }
-        , { $push: { "owned_products": req.body.product } },
-        function (err) {
-            if (err) {
-                console.log(err);
-                res.send("error");
-            } else { res.send("done") }
-        });
+    User.find({ _id: req.params.user_id }).where('reviews_id', req.body.product).then(function (doc, error) {
+        if (doc.length != 0) {
+            User.findOneAndUpdate({ _id: req.params.user_id }
+                , { $addToSet: { "owned_products": req.body.product } },
+                function (err) {
+                    if (err) {
+                        console.log(err);
+                        res.send("error");
+                    } else { res.send("done") }
+                });
+        } else { res.send("error") }
+    });
+
 });
 
 // delete product from owned products
@@ -63,4 +68,15 @@ router.delete('/userproducts/:user_id', function (req, res) {
     });
 });
 
+// get all users for leaderboard
+router.get('/leaderboard', function (req, res) {
+    const limit = 20;
+    const page = parseInt(req.query.page);
+    const startIndex = limit * page;
+
+    User.find({ points: { $gt: 0 } }, { _id: 1, points: 1, user_name: 1, user_avatar: 1 })
+        .sort('-points').limit(limit).skip(startIndex).then(function (revs) {
+            res.send(revs);
+        });
+});
 module.exports = router;

@@ -6,7 +6,7 @@ const ArticleCommentSchema = new Schema({
         type: String,
         required: true
     },
-    article_id: {
+    post_id: {
         type: String,
         required: true
     },
@@ -23,6 +23,9 @@ const ArticleCommentSchema = new Schema({
     user_name: {
         type: String,
     },
+    replies: {
+        type: Array
+    }
 });
 
 const ArticleComment = mongoose.model('comments', ArticleCommentSchema, 'article_comments');

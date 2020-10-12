@@ -5,6 +5,21 @@ const Schema = mongoose.Schema;
 
 // create review Schema & model
 const ReviewSchema = new Schema({
+    likes_num: {
+        type: Number,
+        default: 0
+    },
+    comments_num: {
+        type: Number,
+        default: 0
+    },
+    famous: {
+        type: Boolean,
+    },
+    points: {
+        type: Number,
+        default: 0
+    },
     likes: {
         type: [LikeSchema]
     },

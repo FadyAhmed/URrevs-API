@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ArticleLikeLikeSchema = new Schema({
-    _id: {
+    user_id: {
         type: String,
         required: true
     },
-    article_id: {
+    post_id: {
         type: String,
         required: true
     },

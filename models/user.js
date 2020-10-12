@@ -30,6 +30,13 @@ const UserSchema = new Schema({
     owned_products: {
         type: [String]
     },
+    reviews_id: {
+        type: [String]
+    },
+    points: {
+        type: Number,
+        default: 0
+    }
 });
 
 const User = mongoose.model('user', UserSchema);

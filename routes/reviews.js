@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Review = require('../models/reviews');
+const User = require('../models/user');
 
 // get reviews
 router.get('/reviews', function (req, res) {
@@ -26,6 +27,14 @@ router.get('/reviews', function (req, res) {
 
 // create review
 router.post('/review', function (req, res, next) {
+    var phone_name = req.body.brand + ' ' + req.body.product;
+    var points = (req.body.pros.length + req.body.cons.length) / 4;
+
+    User.findByIdAndUpdate({ _id: req.body.user_id }
+        , { $addToSet: { "reviews_id": phone_name }, $inc: { points: points } }
+        , function (err, doc) { });
+
+    // TODO: check if user is famous
     Review.create(req.body).then(function (rev) {
         res.send(rev);
     }).catch(next);

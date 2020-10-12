@@ -67,42 +67,65 @@ router.delete('/articles/:article_id', function (req, res, next) {
 
 // like it
 router.post('/likeArticle', function (req, res, next) {
-    Like.create(req.body).then(function (doc) {
+    Article.findOneAndUpdate({ "_id": req.body.post_id },
+        { $inc: { likes_num: 1 } }, function (err, doc) {
+            // res.send({ "doc": doc, "err": err });
+        });
+
+    ArticleLike.create(req.body).then(function (doc) {
         res.send(doc);
     });
 });
 
 // get likes
 router.get('/articlelikes/:articleId', function (req, res) {
-    const limit = 5;
+    const limit = 20;
     const startIndex = req.query.page * limit;
 
-    ArticleLike.find({}).where('article_id', req.params.articleId)
+    ArticleLike.find({}).where('post_id', req.params.articleId)
         .sort('-date').limit(limit).skip(startIndex).then(function (likes) {
             res.send(likes);
         })
 });
 
 // get excact like (if user is like or not)
-router.get('/islikedArticle', function (req, res) {
-    ArticleLike.findById({ _id: req.body._id }).then(function (like) {
-        if (like) {
+router.get('/islikedArticle/:articleId', function (req, res) {
+    ArticleLike.findOne({
+        'post_id': req.params.articleId,
+        'user_id': req.query.user_id
+    }).then(function (result) {
+        if (result) {
             res.send(true);
         } else {
             res.send(false);
         }
-    })
+    });
 });
 
 // unlike
-router.delete('/likesArticle', function (req, res, next) {
-    ArticleLike.findByIdAndDelete({ _id: req.body._id }).then(function (d) {
-        res.send(d);
+router.delete('/likesArticle/:articleId', function (req, res, next) {
+    Article.findOneAndUpdate({ "_id": req.params.articleId },
+        { $inc: { likes_num: -1 } }, function (err, doc) {
+            // res.send({ "doc": doc, "err": err });
+        });
+
+    ArticleLike.findOneAndDelete(
+        {
+            'post_id': req.params.articleId,
+            'user_id': req.query.user_id
+        }
+    ).then(function (result) {
+        res.send(result);
     })
 });
 
 // comment
 router.post('/commentArticle', function (req, res, next) {
+    Article.findOneAndUpdate({ "_id": req.body.post_id },
+        { $inc: { comments_num: 1 } }, function (err, doc) {
+            // res.send({ "doc": doc, "err": err });
+        });
+
     ArticleComment.create(req.body).then(function (doc) {
         res.send(doc);
     })
@@ -113,8 +136,9 @@ router.get('/commentsArticle/:articleId', function (req, res) {
     const limit = 5;
     const startIndex = req.query.page * limit;
 
-    ArticleComment.find({}).where("article_id", req.params.articleId)
-        .sort('-date').limit(limit).skip(startIndex)
+    ArticleComment.find({ "post_id": req.params.articleId }
+        , { "replies": { $slice: [0, 3] } }
+    ).sort('date').limit(limit).skip(startIndex)
         .then(function (comments) {
             res.send(comments);
         });
@@ -122,9 +146,31 @@ router.get('/commentsArticle/:articleId', function (req, res) {
 
 // delete comment (admin)
 router.delete('/commentsArticle/:commentId', function (req, res, next) {
+    Article.findOneAndUpdate({ "_id": req.body.post_id },
+        { $inc: { comments_num: -1 } }, function (err, doc) {
+            // res.send({ "doc": doc, "err": err });
+        });
+
     ArticleComment.findByIdAndDelete({ _id: req.params.commentId }).then(function (com) {
         res.send(com);
     });
+});
+
+// add reply
+router.post('/replyArticle/:commentId', function (req, res, next) {
+    ArticleComment.findByIdAndUpdate({ _id: req.params.commentId }
+        , { $push: { replies: req.body } }, function (err, doc) {
+            if (!err) { res.send('done') }
+        });
+});
+
+// get comment replies
+router.get('/repliesArticle/:commentId', function (req, res) {
+    ArticleComment.find({ _id: req.params.commentId }
+        , { _id: 1, "replies": 1 })
+        .then(function (comments) {
+            res.send(comments);
+        });
 });
 
 module.exports = router;

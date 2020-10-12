@@ -20,6 +20,9 @@ const CommentSchema = new Schema({
     user_name: {
         type: String,
     },
+    post_id: {
+        type: String
+    }
 });
 
 //const Comment = mongoose.model('comments', CommentSchema, 'reviews_comments');

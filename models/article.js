@@ -4,6 +4,14 @@ const LikeSchema = require('../models/review_likes');
 const CommentSchema = require('../models/review_comments');
 
 const ArticleSchema = new Schema({
+    likes_num: {
+        type: Number,
+        default: 0
+    },
+    comments_num: {
+        type: Number,
+        default: 0
+    },
     user_id: {
         type: String,
         required: true,
