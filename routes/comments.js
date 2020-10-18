@@ -21,12 +21,32 @@ router.get('/commentsReview/:reviewId', function (req, res) {
     const limit = 5;
     const startIndex = req.query.page * limit;
 
-    ReviewComment.find({ "post_id": req.params.reviewId }
-        , { "replies": { $slice: [0, 3] } }
-    ).sort('date').limit(limit).skip(startIndex)
-        .then(function (comments) {
-            res.send(comments);
-        });
+    ReviewComment.aggregate([
+        { $match: { "post_id": req.params.reviewId } },
+        {
+            $lookup: {
+                from: 'users', localField: 'user_id',
+                foreignField: '_id', as: 'user_info'
+            }
+        },
+        { $sort: { "date": 1 } },
+        { $skip: startIndex },
+        { $limit: limit },
+        {
+            $project: {
+                "user_info.reviews_id": 0, "user_info.owned_products": 0,
+                "user_info.points": 0, "user_info.user_email": 0
+            }
+        },
+        {
+            $project: {
+                _id: 1, date: 1, user_info: 1, comment: 1, post_id: 1,
+                replies: { $slice: ['$replies', 3] }
+            }
+        }
+    ]).then(function (comments) {
+        res.send(comments);
+    });
 });
 
 // delete comment (admin)

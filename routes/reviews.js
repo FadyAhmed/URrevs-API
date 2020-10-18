@@ -4,24 +4,80 @@ const Review = require('../models/reviews');
 const User = require('../models/user');
 
 // get reviews
-router.get('/reviews', function (req, res) {
+router.get('/reviews', function (req, res, next) {
     const limit = 5;
     const page = parseInt(req.query.page);
     const brand = req.query.brand;
     const product = req.query.product;
     const startIndex = limit * page;
+
     if (brand != undefined && product != undefined) {
-        Review.find({}, { "likes": 0, "comments": 0 }).sort("-date_rev").where("brand", brand).where("product", product).limit(limit).skip(startIndex).then(function (revs) {
+        Review.aggregate([
+            { $match: { 'brand': req.query.brand, 'product': req.query.product } },
+            {
+                $lookup: {
+                    from: 'users', localField: 'user_id',
+                    foreignField: '_id', as: 'user_info'
+                }
+            },
+            { $sort: { "date_rev": -1 } },
+            { $skip: startIndex },
+            { $limit: limit },
+            {
+                $project: {
+                    likes: 0, comments: 0
+                    , "user_info.reviews_id": 0, "user_info.owned_products": 0,
+                    "user_info.points": 0, "user_info.user_email": 0
+                }
+            }
+
+        ]).then(function (revs) {
             res.send(revs);
-        });
+        }).catch(next);
     } else if (brand != undefined) {
-        Review.find({}, { "likes": 0, "comments": 0 }).sort("-date_rev").where("brand", brand).limit(limit).skip(startIndex).then(function (revs) {
+        Review.aggregate([
+            { $match: { 'brand': req.query.brand } },
+            {
+                $lookup: {
+                    from: 'users', localField: 'user_id',
+                    foreignField: '_id', as: 'user_info'
+                }
+            },
+            { $sort: { "date_rev": -1 } },
+            { $skip: startIndex },
+            { $limit: limit },
+            {
+                $project: {
+                    likes: 0, comments: 0
+                    , "user_info.reviews_id": 0, "user_info.owned_products": 0,
+                    "user_info.points": 0, "user_info.user_email": 0
+                }
+            }
+        ]).then(function (revs) {
             res.send(revs);
-        });
+        }).catch(next);
     } else {
-        Review.find({}, { "likes": 0, "comments": 0 }).sort("-date_rev").limit(limit).skip(startIndex).then(function (revs) {
+        Review.aggregate([
+            {
+                $lookup: {
+                    from: 'users', localField: 'user_id',
+                    foreignField: '_id', as: 'user_info'
+                }
+            },
+            { $sort: { "date_rev": -1 } },
+            { $skip: startIndex },
+            { $limit: limit },
+            {
+                $project: {
+                    likes: 0, comments: 0
+                    , "user_info.reviews_id": 0, "user_info.owned_products": 0,
+                    "user_info.points": 0, "user_info.user_email": 0
+                }
+            }
+
+        ]).then(function (revs) {
             res.send(revs);
-        });
+        }).catch(next);
     }
 });
 
@@ -32,7 +88,7 @@ router.post('/review', function (req, res, next) {
 
     User.findByIdAndUpdate({ _id: req.body.user_id }
         , { $addToSet: { "reviews_id": phone_name }, $inc: { points: points } }
-        , function (err, doc) { });
+        , function (err, doc) { }).catch(next);
 
     // TODO: check if user is famous
     Review.create(req.body).then(function (rev) {
@@ -52,7 +108,7 @@ router.delete('/reviews/:reviewId', function (req, res, next) {
         } else {
             res.send({ res: "this one deleted before" });
         }
-    })
+    }).catch(next);
 });
 
 module.exports = router;
