@@ -155,15 +155,15 @@ router.get('/commentsArticle/:articleId', function (req, res) {
     const startIndex = req.query.page * limit;
 
     ArticleComment.aggregate([
+        { $sort: { "date": 1 } },
+        { $skip: startIndex },
+        { $limit: limit },
         {
             $lookup: {
                 from: 'users', localField: 'user_id',
                 foreignField: '_id', as: 'user_info'
             }
         },
-        { $sort: { "date": 1 } },
-        { $skip: startIndex },
-        { $limit: limit },
         {
             $project: {
                 "user_info.reviews_id": 0, "user_info.owned_products": 0,

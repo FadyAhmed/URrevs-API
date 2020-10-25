@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cron = require('node-cron');
 const Brand = require('./models/brand');
+var admin = require('firebase-admin');
 
 // set up app
 const app = express();
@@ -25,6 +26,11 @@ app.use('/urrevs', require('./routes/article'));
 app.use('/urrevs', require('./routes/phone'));
 app.use('/urrevs', require('./routes/brand_routes'));
 
+admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: 'https://urrev.firebaseio.com'
+});
+
 // handling error
 app.use(function (error, req, res, next) {
     res.status(422).send(error.message);
@@ -32,6 +38,8 @@ app.use(function (error, req, res, next) {
 
 // listen for requests
 app.listen(process.env.port || 4000, function () {
+ 
+    
     console.log('listing');
     cron.schedule("0 */1 * * *", function () {
         console.log('d');

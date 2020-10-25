@@ -13,16 +13,10 @@ const ReviewSchema = new Schema({
         type: Number,
         default: 0
     },
-    famous: {
-        type: Boolean,
-    },
-    points: {
-        type: Number,
-        default: 0
-    },
     likes: {
         type: [LikeSchema]
     },
+    
     approved: {
         type: Boolean
     },
@@ -53,10 +47,7 @@ const ReviewSchema = new Schema({
         required: true
 
     },
-    email: {
-        type: String,
-        required: true
-    },
+  
     product: {
         type: String,
         required: true,
@@ -100,17 +91,11 @@ const ReviewSchema = new Schema({
     shown: {
         type: Boolean
     },
-    user_avatar: {
-        type: String,
-        required: true
-    },
+   
     user_id: {
         type: String
     },
-    user_name: {
-        type: String,
-        required: true
-    },
+    
     views: {
         type: Number
     },

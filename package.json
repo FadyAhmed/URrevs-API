@@ -2,7 +2,7 @@
   "name": "urrevs-api",
   "version": "1.0.0",
   "description": "URrevs nodejs API",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
+    "firebase-admin": "^9.3.0",
     "mongo-scheduler-more": "^2.2.2",
     "mongoose": "^5.10.5",
     "node-cron": "^2.0.3"

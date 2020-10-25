@@ -3,6 +3,7 @@ const { createIndexes } = require('./article');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+
     _id: {
         type: String,
         required: true,
@@ -22,6 +23,7 @@ const UserSchema = new Schema({
     },
     famous: {
         type: Boolean,
+        default: false,
         required: true
     },
     famous_photo: {

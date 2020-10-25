@@ -41,7 +41,7 @@ router.get('/commentsReview/:reviewId', function (req, res) {
         {
             $project: {
                 _id: 1, date: 1, user_info: 1, comment: 1, post_id: 1,
-                replies: { $slice: ['$replies', 3] }
+                replies: { $reverseArray: { $slice: ['$replies', -3] } }
             }
         }
     ]).then(function (comments) {

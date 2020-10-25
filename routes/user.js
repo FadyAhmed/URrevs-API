@@ -1,23 +1,24 @@
 const express = require('express');
-const User = require('../models/user');
 const router = express.Router();
+const User = require('../models/user');
 
 // get all famous users
 router.get('/famoususers', function (req, res) {
-    User.find({ famous: true }, { "owned_products": 0, "user_email": 0 }).then(function (users) {
+    User.find({ famous: true }, { "owned_products": 0, "user_email": 0, 'token': 0 }).then(function (users) {
         res.send(users);
     });
 });
 
 // get exact user data
 router.get('/users/:user_id', function (req, res) {
-    User.find({ _id: req.params.user_id }).then(function (user) {
+    User.find({ _id: req.params.user_id }, { 'token': 0 }).then(function (user) {
         res.send(user);
     });
 });
 
 // add or update user profile
 router.post('/user/:user_id', function (req, res, next) {
+
     User.updateOne({ "_id": req.params.user_id },
         req.body,
         {
@@ -32,6 +33,7 @@ router.post('/user/:user_id', function (req, res, next) {
             }
         }
     );
+
 });
 
 // get user products
@@ -56,7 +58,6 @@ router.post('/userproducts/:user_id', function (req, res, next) {
                 });
         } else { res.send("error") }
     });
-
 });
 
 // delete product from owned products
@@ -79,4 +80,5 @@ router.get('/leaderboard', function (req, res) {
             res.send(revs);
         });
 });
+
 module.exports = router;
