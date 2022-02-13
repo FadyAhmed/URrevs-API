@@ -13,7 +13,6 @@ router.post('/phone', function (req, res) {
             if (!err) {
                 res.send(doc)
             } else {
-                console.log(err);
                 next
             }
         }

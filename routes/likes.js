@@ -22,7 +22,6 @@ router.get('/likes/:revid', function (req, res) {
     Review.find({ "_id": req.params.revid }
         , { _id: 1, "likes": { $slice: [startIndex, limit] } }
     ).then(function (likes) {
-        console.log(likes);
         if (likes != undefined) {
             res.send(likes[0].likes);
         } else {

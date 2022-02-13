@@ -17,9 +17,7 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useUnifiedTopology", true);
 
-mongoose.connect(uri, (err) => {
-  if (err) console.log(err);
-});
+mongoose.connect(uri, (err) => {});
 
 mongoose.Promise = global.Promise;
 
@@ -42,10 +40,8 @@ app.use(function (error, req, res, next) {
 });
 
 // listen for requests
-app.listen(4000, function () {
-  console.log("listening");
+app.listen(process.env.PORT || 4000, function () {
   cron.schedule("0 */1 * * *", function () {
-    console.log("d");
     Brand.updateMany(
       {},
       { $pull: { story: { until: { $lt: Math.floor(Date.now() / 1000) } } } }

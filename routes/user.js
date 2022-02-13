@@ -27,7 +27,6 @@ router.post('/user/:user_id', function (req, res, next) {
             if (!err) {
                 res.send(doc)
             } else {
-                console.log(err);
                 next
             }
         }
@@ -50,7 +49,6 @@ router.post('/userproducts/:user_id', function (req, res, next) {
                 , { $addToSet: { "owned_products": req.body.product } },
                 function (err) {
                     if (err) {
-                        console.log(err);
                         res.send("error");
                     } else { res.send("done") }
                 });
