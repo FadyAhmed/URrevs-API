@@ -4,7 +4,8 @@
   "description": "URrevs nodejs API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server"
   },
   "keywords": [
     "urrevs",
@@ -17,6 +18,7 @@
     "express": "^4.17.1",
     "mongo-scheduler-more": "^2.2.2",
     "mongoose": "^5.10.5",
+    "morgan": "^1.10.0",
     "node-cron": "^2.0.3"
   },
   "devDependencies": {
