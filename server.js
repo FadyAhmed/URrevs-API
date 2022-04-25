@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 const Brand = require("./models/brand");
 const morgan = require("morgan");
+const cors = require("cors");
 
 // set up app
 const app = express();
@@ -21,6 +22,7 @@ mongoose.connect(uri, (err) => {});
 
 mongoose.Promise = global.Promise;
 
+app.use(cors());
 app.use(morgan("tiny"));
 
 app.use(bodyParser.json());
@@ -40,7 +42,7 @@ app.use(function (error, req, res, next) {
 });
 
 // listen for requests
-app.listen(process.env.PORT || 4000, function () {
+app.listen(process.env.PORT || 3000, function () {
   cron.schedule("0 */1 * * *", function () {
     Brand.updateMany(
       {},

@@ -5,7 +5,7 @@ const User = require("../models/user");
 
 // get reviews
 router.get("/reviews", function (req, res) {
-  const limit = 5;
+  const limit = 10;
   const page = parseInt(req.query.page);
   const brand = req.query.brand;
   const product = req.query.product;
@@ -35,7 +35,9 @@ router.get("/reviews", function (req, res) {
       .limit(limit)
       .skip(startIndex)
       .then(function (revs) {
-        res.send(revs);
+        setTimeout(() => {
+          res.send(revs);
+        }, 0);
       });
   }
 });
